@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted, Ref, defineEmits } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
-import { SkillResponse } from '@/models/api'
+import { HardSkillItem, SkillItem, SkillResponse } from '@/models/api'
 
 const ANIMATION_SPEED = 350
 
@@ -71,12 +71,12 @@ const loadingsSkills = [
   }
 ]
 
-const skillsLeft = ref(loadingsSkills)
-const skillsRight = ref(loadingsSkills)
+const skillsLeft: Ref<SkillItem[]> = ref(loadingsSkills)
+const skillsRight: Ref<SkillItem[]> = ref(loadingsSkills)
 const hardSkills = ref([])
 const skillsResponse: Ref<SkillResponse> = ref([])
 
-const addIcons = (icons) => {
+const addIcons = (icons: { name: string; color: string; logo: string }[]) => {
   let iconCount = icons.length
 
   iconCount = iconCount - 1
@@ -120,7 +120,7 @@ const setSkills = () => {
     const { SS: skillList } = response.skills
     const { L: hardSkillResponse } = response.hardSkills
 
-    const rightSide = skillList.map((item) => {
+    const rightSide = skillList.map((item: string) => {
       const iconName = format(item)
 
       return {
@@ -130,7 +130,7 @@ const setSkills = () => {
     })
 
     addIcons(
-      hardSkillResponse.map(({ M }) => {
+      hardSkillResponse.map(({ M }: HardSkillItem) => {
         return {
           name: M.name.S,
           color: `rgba(${M.color.S});`,

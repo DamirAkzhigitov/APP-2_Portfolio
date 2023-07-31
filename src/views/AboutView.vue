@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, Ref, ref } from 'vue'
-import {
+import { defineAsyncComponent, onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
+import type {
   AboutMeBlockItem,
   AboutResponse,
   ContactItem,
@@ -46,8 +47,8 @@ const ExperienceList = defineAsyncComponent(
 
 const experienceItems: Ref<ExperienceItem[]> = ref([])
 const educationItems: Ref<EducationItem[]> = ref([])
-const contactItem: Ref<ContactItem> = ref({})
-const aboutMe: Ref<AboutMeBlockItem> = ref({})
+const contactItem: Ref<ContactItem | undefined> = ref(undefined)
+const aboutMe: Ref<AboutMeBlockItem | undefined> = ref(undefined)
 
 const animationSteps = ref({
   avatar: false,
@@ -56,7 +57,7 @@ const animationSteps = ref({
   experience: false
 })
 
-const animationDone = ({ prev, next }) => {
+const animationDone = ({ prev, next }: { prev: string; next: string }) => {
   if (prev) animationSteps.value[prev] = false
   if (next) animationSteps.value[next] = true
 }

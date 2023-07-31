@@ -19,13 +19,14 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType } from 'vue'
-import { ExperienceItem } from '@/models/api'
+import { computed } from 'vue'
+import type { PropType } from 'vue'
+import { ExperienceItem, ExperienceItemMap } from '@/models/api'
 
 export default {
   props: {
     value: {
-      type: Array as PropType<ExperienceItem[]>,
+      type: Array as PropType<ExperienceItemMap[]>,
       default() {
         return []
       }
@@ -40,7 +41,7 @@ export default {
       return props?.value?.map((item) => item.M)
     })
 
-    const getImagePath = (item) => {
+    const getImagePath = (item: ExperienceItem) => {
       let src = ''
 
       if (item && item.image) {

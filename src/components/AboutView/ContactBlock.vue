@@ -10,13 +10,14 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, ref, watch } from 'vue'
-import { ContactItem } from '@/models/api'
+import { computed, ref, watch } from 'vue'
+import type { PropType } from 'vue'
+import type { ContactItem } from '@/models/api'
 
 export default {
   props: {
     value: {
-      type: Array as PropType<ContactItem>,
+      type: Array as unknown as PropType<ContactItem>,
       default() {
         return []
       }
