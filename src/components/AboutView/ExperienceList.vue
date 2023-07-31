@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, toRef } from 'vue'
+import { computed, PropType } from 'vue'
 import { ExperienceItem } from '@/models/api'
 
 export default {
@@ -80,11 +80,18 @@ export default {
       z-index: 2;
     }
 
+    .experience__name {
+      font-weight: 700;
+    }
+    .experience__description {
+      font-weight: 600;
+    }
+
     .experience__list-background {
       z-index: 1;
       background-repeat: no-repeat;
       background-size: cover;
-      opacity: 0.2;
+      opacity: 0.1;
 
       position: absolute;
       left: 0;
