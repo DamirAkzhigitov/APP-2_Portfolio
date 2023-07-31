@@ -51,9 +51,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, Ref } from 'vue'
+import { ref, onMounted, Ref, defineEmits } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
 import { SkillResponse } from '@/models/api'
+
+const ANIMATION_SPEED = 350
+
+const emit = defineEmits(['animationDone'])
 
 const loadingsSkills = [
   {
@@ -80,7 +84,11 @@ const addIcons = (icons) => {
   hardSkills.value.push(icons[iconCount])
 
   const pushIcon = () => {
-    if (iconCount < 0) return
+    if (iconCount <= 0) {
+      emit('animationDone', { next: 'description', prev: 'avatar' })
+
+      return
+    }
 
     setTimeout(() => {
       iconCount = iconCount - 1
@@ -89,7 +97,7 @@ const addIcons = (icons) => {
         hardSkills.value.push(icons[iconCount])
         pushIcon()
       }
-    }, 1000)
+    }, ANIMATION_SPEED)
   }
 
   pushIcon()

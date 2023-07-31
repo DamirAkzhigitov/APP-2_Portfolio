@@ -1,7 +1,7 @@
 'use strict'
 console.log('Loading hello world function')
 
-import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 
 const tableName = 'PortfolioWebDatabase'
 const dynamodb = new DynamoDBClient({
@@ -26,12 +26,33 @@ const lambda_handler = async (event) => {
   if (event.path === '/skills') {
     const params = {
       TableName: tableName,
-      Select: 'ALL_ATTRIBUTES'
+      ExpressionAttributeValues: {
+        ':a': { S: 'skills' }
+      },
+      KeyConditionExpression: 'cvid = :a'
     }
 
-    const command = new ScanCommand(params)
+    const command = new QueryCommand(params)
 
-    responseBody = await dynamodb.send(command)
+    const response = await dynamodb.send(command)
+
+    responseBody = response.Items
+  }
+
+  if (event.path === '/about_me') {
+    const params = {
+      TableName: tableName,
+      ExpressionAttributeValues: {
+        ':a': { S: 'about_me' }
+      },
+      KeyConditionExpression: 'cvid = :a'
+    }
+
+    const command = new QueryCommand(params)
+
+    const response = await dynamodb.send(command)
+
+    responseBody = response.Items
   }
 
   // if (event.body) {
@@ -49,4 +70,4 @@ const lambda_handler = async (event) => {
   }
 }
 
-module.exports = { lambda_handler }
+export { lambda_handler }
