@@ -1,14 +1,20 @@
-import './assets/main.css'
+import './assets/main.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import SiteInProgress from './views/SiteInProgress.vue'
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+const inProgress = import.meta.env.VITE_APP_IN_PROGRESS !== 'false'
 
-app.use(createPinia())
-app.use(router)
+const mainApp = inProgress ? SiteInProgress : App
+
+const app = createApp(mainApp)
+
+if (!inProgress) {
+  app.use(createPinia())
+  app.use(router)
+}
 
 app.mount('#app')

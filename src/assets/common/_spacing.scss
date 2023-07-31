@@ -1,0 +1,22 @@
+.theme {
+  &.theme-default {
+    --space-xs: 6px;
+    --space-s: 10px;
+    --space-sm: 14px;
+    --space-m: 20px;
+    --space-l: 40px;
+  }
+
+  @media screen and (max-width: 600px) {
+    &.theme-default {
+      --space-xs: 4px;
+      --space-s: 8px;
+      --space-sm: 12px;
+      --space-m: 15px;
+      --space-l: 20px;
+    }
+  }
+}
+.test {
+  background-color: rgb(49, 120, 197);
+}
