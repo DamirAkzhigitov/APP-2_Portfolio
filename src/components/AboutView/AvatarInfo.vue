@@ -53,7 +53,8 @@
 <script setup lang="ts">
 import { ref, onMounted, Ref, defineEmits } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
-import { HardSkillItem, SkillItem, SkillResponse } from '@/models/api'
+import { HardSkillItem, SkillItem, SkillResponse, SkillResponseItem } from '@/models/api'
+import { getSkills } from '@/api/profile'
 
 const ANIMATION_SPEED = 350
 
@@ -74,7 +75,7 @@ const loadingsSkills = [
 const skillsLeft: Ref<SkillItem[]> = ref(loadingsSkills)
 const skillsRight: Ref<SkillItem[]> = ref(loadingsSkills)
 const hardSkills = ref([])
-const skillsResponse: Ref<SkillResponse> = ref([])
+const skillsResponse: Ref<SkillResponse | null> = ref(null)
 
 const addIcons = (icons: { name: string; color: string; logo: string }[]) => {
   let iconCount = icons.length
@@ -104,44 +105,40 @@ const addIcons = (icons: { name: string; color: string; logo: string }[]) => {
 }
 
 const fetchSkills = async () => {
-  try {
-    const data = await fetch('/api/skills', {
-      cache: 'force-cache'
-    })
-    skillsResponse.value = await data.json()
-  } catch (e) {
-    console.error('fetchSkills error: ', e)
-  }
+  const data = await getSkills()
+
+  if (!data) return
+
+  skillsResponse.value = data
 }
 const setSkills = () => {
-  if (Array.isArray(skillsResponse.value) && skillsResponse.value.length > 0) {
-    const response = skillsResponse.value[0]
+  if (!skillsResponse.value) return
+  const response = skillsResponse.value
 
-    const { SS: skillList } = response.skills
-    const { L: hardSkillResponse } = response.hardSkills
+  const { SS: skillList } = response.skills
+  const { L: hardSkillResponse } = response.hardSkills
 
-    const rightSide = skillList.map((item: string) => {
-      const iconName = format(item)
+  const rightSide = skillList.map((item: string) => {
+    const iconName = format(item)
 
+    return {
+      title: item,
+      icon: getIcon(iconName)
+    }
+  })
+
+  addIcons(
+    hardSkillResponse.map(({ M }: HardSkillItem) => {
       return {
-        title: item,
-        icon: getIcon(iconName)
+        name: M.name.S,
+        color: `rgba(${M.color.S});`,
+        logo: M.logo.S
       }
     })
+  )
 
-    addIcons(
-      hardSkillResponse.map(({ M }: HardSkillItem) => {
-        return {
-          name: M.name.S,
-          color: `rgba(${M.color.S});`,
-          logo: M.logo.S
-        }
-      })
-    )
-
-    skillsLeft.value = rightSide.splice(0, 3)
-    skillsRight.value = rightSide
-  }
+  skillsLeft.value = rightSide.splice(0, 3)
+  skillsRight.value = rightSide
 }
 
 onMounted(async () => {

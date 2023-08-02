@@ -20,14 +20,17 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue'
+import axios from '@/api/index'
 import type { Ref } from 'vue'
 import type {
   AboutMeBlockItem,
-  AboutResponse,
+  AboutResponseItem,
   ContactItem,
   EducationItem,
-  ExperienceItem
+  ExperienceItemMap
 } from '@/models/api'
+
+import { getAboutMe } from '@/api/profile'
 
 const EducationBlock = defineAsyncComponent(
   () => import('@/components/AboutView/EducationBlock.vue')
@@ -45,7 +48,7 @@ const ExperienceList = defineAsyncComponent(
   () => import('@/components/AboutView/ExperienceList.vue')
 )
 
-const experienceItems: Ref<ExperienceItem[]> = ref([])
+const experienceItems: Ref<ExperienceItemMap[]> = ref([])
 const educationItems: Ref<EducationItem[]> = ref([])
 const contactItem: Ref<ContactItem | undefined> = ref(undefined)
 const aboutMe: Ref<AboutMeBlockItem | undefined> = ref(undefined)
@@ -63,21 +66,14 @@ const animationDone = ({ prev, next }: { prev: string; next: string }) => {
 }
 
 const fetchAboutMe = async () => {
-  try {
-    const data = await fetch('/api/about_me', {
-      cache: 'force-cache'
-    })
-    const [response] = (await data.json()) as AboutResponse
+  const data = await getAboutMe()
 
-    experienceItems.value = response.experience.L
-    educationItems.value = response.education.L
-    contactItem.value = response.contact.M
-    aboutMe.value = response.about_me.M
+  if (!data) return
 
-    console.log('response: ', response)
-  } catch (e) {
-    console.error('fetchSkills error: ', e)
-  }
+  experienceItems.value = data.experience.L
+  educationItems.value = data.education.L
+  contactItem.value = data.contact.M
+  aboutMe.value = data.about_me.M
 }
 
 onMounted(() => {
