@@ -6,7 +6,7 @@ import SiteInProgress from './views/SiteInProgress.vue'
 import App from './App.vue'
 import router from './router'
 
-const inProgress = import.meta.env.VITE_APP_IN_PROGRESS !== 'false'
+const inProgress = import.meta.env.VITE_APP_STATUS === 'IN_PROGRESS'
 
 const mainApp = inProgress ? SiteInProgress : App
 
