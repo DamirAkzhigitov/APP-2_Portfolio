@@ -20,15 +20,8 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from 'vue'
-import axios from '@/api/index'
 import type { Ref } from 'vue'
-import type {
-  AboutMeBlockItem,
-  AboutResponseItem,
-  ContactItem,
-  EducationItem,
-  ExperienceItemMap
-} from '@/models/api'
+import type { AboutMeBlockItem, ContactItem, EducationItem, ExperienceItemMap } from '@/models/api'
 
 import { getAboutMe } from '@/api/profile'
 

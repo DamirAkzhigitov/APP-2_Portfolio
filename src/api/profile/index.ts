@@ -4,7 +4,7 @@ import { AboutResponseItem, SkillResponse } from '@/models/api'
 export const getAboutMe = async (): Promise<AboutResponseItem | null> => {
   let response = null
   try {
-    response = await axios.get('/api/about_me').then((response) => response.data[0])
+    response = await axios.get('/about_me').then((response) => response.data[0])
   } catch (e) {
     console.error(e)
   }
@@ -14,7 +14,7 @@ export const getAboutMe = async (): Promise<AboutResponseItem | null> => {
 export const getSkills = async (): Promise<SkillResponse | null> => {
   let response = null
   try {
-    response = await axios.get('/api/skills').then((response) => response.data[0])
+    response = await axios.get('/skills').then((response) => response.data[0])
   } catch (e) {
     console.error(e)
   }
