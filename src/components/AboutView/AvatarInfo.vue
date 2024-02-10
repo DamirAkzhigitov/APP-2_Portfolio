@@ -51,9 +51,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, Ref, defineEmits } from 'vue'
+import { ref, onMounted, Ref } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
-import { SkillItem, SkillResponse } from '@/models/api'
+import type { SkillItem, SkillResponse } from '@/models/api'
 import { getSkills } from '@/api/profile'
 
 const ANIMATION_SPEED = 350
