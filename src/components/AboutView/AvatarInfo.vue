@@ -5,7 +5,7 @@
         <li v-for="skill in skillsLeft" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" class="item-icon"  alt=""/>
+            <img :src="skill?.icon" class="item-icon" alt="" />
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
@@ -24,7 +24,7 @@
         <li v-for="skill in skillsRight" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" alt="" class="item-icon"/>
+            <img :src="skill?.icon" alt="" class="item-icon" />
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
