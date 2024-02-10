@@ -1,6 +1,4 @@
 'use strict'
-console.log('Loading hello world function')
-
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 
 const tableName = 'PortfolioWebDatabase'
@@ -61,11 +59,17 @@ const lambda_handler = async (event) => {
   //     time = body.time;
   // }
   // console.log("response: " + JSON.stringify(response))
+  const headers = {}
+
+  const corsWhitelist = ['https://develop.damir-portfolio.com/', 'https://damir-portfolio.com/']
+  if (corsWhitelist.indexOf(event.headers.origin) !== -1) {
+    headers['Access-Control-Allow-Origin'] = event.headers.origin
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
+  }
+
   return {
     statusCode: responseCode,
-    headers: {
-      'x-custom-header': 'my custom header value'
-    },
+    headers: headers,
     body: JSON.stringify(responseBody)
   }
 }

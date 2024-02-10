@@ -24,4 +24,10 @@ export interface SkillResponseItem {
   }
 }
 
-export type SkillResponse = SkillResponseItem[]
+export interface SkillItem {
+  icon?: string
+  title?: string
+  loading?: boolean
+}
+
+export type SkillResponse = SkillResponseItem

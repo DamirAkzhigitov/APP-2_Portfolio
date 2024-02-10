@@ -5,7 +5,7 @@
         <li v-for="skill in skillsLeft" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" class="item-icon" />
+            <img :src="skill?.icon" class="item-icon"  alt=""/>
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
@@ -24,7 +24,7 @@
         <li v-for="skill in skillsRight" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" class="item-icon" />
+            <img :src="skill?.icon" alt="" class="item-icon"/>
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
@@ -51,9 +51,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, Ref, defineEmits } from 'vue'
+import { ref, onMounted, Ref } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
-import { SkillResponse } from '@/models/api'
+import type { SkillItem, SkillResponse } from '@/models/api'
+import { getSkills } from '@/api/profile'
 
 const ANIMATION_SPEED = 350
 
@@ -71,12 +72,12 @@ const loadingsSkills = [
   }
 ]
 
-const skillsLeft = ref(loadingsSkills)
-const skillsRight = ref(loadingsSkills)
+const skillsLeft: Ref<SkillItem[]> = ref(loadingsSkills)
+const skillsRight: Ref<SkillItem[]> = ref(loadingsSkills)
 const hardSkills = ref([])
-const skillsResponse: Ref<SkillResponse> = ref([])
+const skillsResponse: Ref<SkillResponse | null> = ref(null)
 
-const addIcons = (icons) => {
+const addIcons = (icons: { name: string; color: string; logo: string }[]) => {
   let iconCount = icons.length
 
   iconCount = iconCount - 1
@@ -104,44 +105,41 @@ const addIcons = (icons) => {
 }
 
 const fetchSkills = async () => {
-  try {
-    const data = await fetch('/api/skills', {
-      cache: 'force-cache'
-    })
-    skillsResponse.value = await data.json()
-  } catch (e) {
-    console.error('fetchSkills error: ', e)
-  }
+  const data = await getSkills()
+
+  if (!data) return
+
+  skillsResponse.value = data
 }
 const setSkills = () => {
-  if (Array.isArray(skillsResponse.value) && skillsResponse.value.length > 0) {
-    const response = skillsResponse.value[0]
+  const response = skillsResponse.value
 
-    const { SS: skillList } = response.skills
-    const { L: hardSkillResponse } = response.hardSkills
+  if (!response) return
 
-    const rightSide = skillList.map((item) => {
-      const iconName = format(item)
+  const { SS: skillList } = response.skills
+  const { L: hardSkillResponse } = response.hardSkills
 
+  const rightSide = skillList.map((item: string) => {
+    const iconName = format(item)
+
+    return {
+      title: item,
+      icon: getIcon(iconName)
+    }
+  })
+
+  addIcons(
+    hardSkillResponse.map((item) => {
       return {
-        title: item,
-        icon: getIcon(iconName)
+        name: item.M.name.S,
+        color: `rgba(${item.M.color.S});`,
+        logo: item.M.logo.S
       }
     })
+  )
 
-    addIcons(
-      hardSkillResponse.map(({ M }) => {
-        return {
-          name: M.name.S,
-          color: `rgba(${M.color.S});`,
-          logo: M.logo.S
-        }
-      })
-    )
-
-    skillsLeft.value = rightSide.splice(0, 3)
-    skillsRight.value = rightSide
-  }
+  skillsLeft.value = rightSide.splice(0, 3)
+  skillsRight.value = rightSide
 }
 
 onMounted(async () => {

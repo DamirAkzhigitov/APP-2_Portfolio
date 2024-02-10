@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, ref, watch } from 'vue'
-import { AboutMeBlockItem } from '@/models/api'
+import { computed, ref, watch } from 'vue'
+import type { PropType } from 'vue'
+import type { AboutMeBlockItem } from '@/models/api'
 
 export default {
   props: {

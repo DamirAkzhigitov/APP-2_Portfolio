@@ -19,14 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, Ref, ref } from 'vue'
-import {
-  AboutMeBlockItem,
-  AboutResponse,
-  ContactItem,
-  EducationItem,
-  ExperienceItem
-} from '@/models/api'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
+import type { AboutMeBlockItem, ContactItem, EducationItem, ExperienceItemMap } from '@/models/api'
+
+import { getAboutMe } from '@/api/profile'
 
 const EducationBlock = defineAsyncComponent(
   () => import('@/components/AboutView/EducationBlock.vue')
@@ -44,10 +41,10 @@ const ExperienceList = defineAsyncComponent(
   () => import('@/components/AboutView/ExperienceList.vue')
 )
 
-const experienceItems: Ref<ExperienceItem[]> = ref([])
+const experienceItems: Ref<ExperienceItemMap[]> = ref([])
 const educationItems: Ref<EducationItem[]> = ref([])
-const contactItem: Ref<ContactItem> = ref({})
-const aboutMe: Ref<AboutMeBlockItem> = ref({})
+const contactItem: Ref<ContactItem | undefined> = ref(undefined)
+const aboutMe: Ref<AboutMeBlockItem | undefined> = ref(undefined)
 
 const animationSteps = ref({
   avatar: false,
@@ -56,27 +53,20 @@ const animationSteps = ref({
   experience: false
 })
 
-const animationDone = ({ prev, next }) => {
+const animationDone = ({ prev, next }: { prev: string; next: string }) => {
   if (prev) animationSteps.value[prev] = false
   if (next) animationSteps.value[next] = true
 }
 
 const fetchAboutMe = async () => {
-  try {
-    const data = await fetch('/api/about_me', {
-      cache: 'force-cache'
-    })
-    const [response] = (await data.json()) as AboutResponse
+  const data = await getAboutMe()
 
-    experienceItems.value = response.experience.L
-    educationItems.value = response.education.L
-    contactItem.value = response.contact.M
-    aboutMe.value = response.about_me.M
+  if (!data) return
 
-    console.log('response: ', response)
-  } catch (e) {
-    console.error('fetchSkills error: ', e)
-  }
+  experienceItems.value = data.experience.L
+  educationItems.value = data.education.L
+  contactItem.value = data.contact.M
+  aboutMe.value = data.about_me.M
 }
 
 onMounted(() => {

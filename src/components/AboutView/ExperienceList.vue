@@ -1,7 +1,7 @@
 <template>
   <section class="experience-container">
     <h3 class="experience__title">Professional experience</h3>
-    <ul class="experience__list">
+    <ul v-if="experienceList" class="experience__list">
       <li v-for="item in experienceList" :key="item.role_name.S" class="experience__list_item">
         <div class="experience__list-background" :style="getImagePath(item)"></div>
         <div class="experience__date-range">
@@ -19,13 +19,14 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType } from 'vue'
-import { ExperienceItem } from '@/models/api'
+import { computed, defineComponent } from 'vue'
+import type { PropType } from 'vue'
+import type { ExperienceItem, ExperienceItemMap } from '@/models/api'
 
-export default {
+export default defineComponent({
   props: {
     value: {
-      type: Array as PropType<ExperienceItem[]>,
+      type: Array as PropType<ExperienceItemMap[]>,
       default() {
         return []
       }
@@ -37,10 +38,12 @@ export default {
   },
   setup(props) {
     const experienceList = computed(() => {
-      return props?.value?.map((item) => item.M)
+      if (!props.value) return null
+
+      return props.value.map((item) => item.M)
     })
 
-    const getImagePath = (item) => {
+    const getImagePath = (item: ExperienceItem) => {
       let src = ''
 
       if (item && item.image) {
@@ -55,7 +58,7 @@ export default {
       getImagePath
     }
   }
-}
+})
 </script>
 
 <style lang="scss">

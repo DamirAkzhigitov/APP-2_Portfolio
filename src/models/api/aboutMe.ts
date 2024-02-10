@@ -1,37 +1,39 @@
 export interface ExperienceItem {
-  M: {
-    role_name: {
-      S: string
-    }
-    end_date: {
-      S: string
-    }
-    work_now: {
-      BOOL: boolean
-    }
-    company_title: {
-      S: string
-    }
-    company_web: {
-      S: string
-    }
-    role_location: {
-      S: string
-    }
-    role_description: {
-      S: string
-    }
-    start_date: {
-      S: string
-    }
-    image: {
-      S: string
-    }
+  role_name: {
+    S: string
+  }
+  end_date: {
+    S: string
+  }
+  work_now: {
+    BOOL: boolean
+  }
+  company_title: {
+    S: string
+  }
+  company_web: {
+    S: string
+  }
+  role_location: {
+    S: string
+  }
+  role_description: {
+    S: string
+  }
+  start_date: {
+    S: string
+  }
+  image: {
+    S: string
   }
 }
 
+export interface ExperienceItemMap {
+  M: ExperienceItem
+}
+
 export interface ExperienceItemList {
-  L: ExperienceItem[]
+  L: ExperienceItemMap[]
 }
 
 export interface AboutMeDescriptionItem {
