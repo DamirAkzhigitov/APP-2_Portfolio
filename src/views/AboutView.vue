@@ -12,9 +12,6 @@
       class="contact-block"
     />
     <experience-list :value="experienceItems" class="experience-list" />
-    <education-block :value="educationItems" class="education-block" />
-    <projects-description class="projects-description" />
-    <skills-list class="skills-list" />
   </div>
 </template>
 
@@ -25,15 +22,9 @@ import type { AboutMeBlockItem, ContactItem, EducationItem, ExperienceItemMap } 
 
 import { getAboutMe } from '@/api/profile'
 
-const EducationBlock = defineAsyncComponent(
-  () => import('@/components/AboutView/EducationBlock.vue')
-)
+
 const ContactBlock = defineAsyncComponent(() => import('@/components/AboutView/ContactBlock.vue'))
 const AvatarInfo = defineAsyncComponent(() => import('@/components/AboutView/AvatarInfo.vue'))
-const ProjectsDescription = defineAsyncComponent(
-  () => import('@/components/AboutView/ProjectsDescription.vue')
-)
-const SkillsList = defineAsyncComponent(() => import('@/components/AboutView/SkillsList.vue'))
 const ShortDescription = defineAsyncComponent(
   () => import('@/components/AboutView/ShortDescription.vue')
 )
