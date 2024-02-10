@@ -1,5 +1,5 @@
 import axios from '@/api/index'
-import { AboutResponseItem, SkillResponse } from '@/models/api'
+import type { SkillResponse, AboutResponseItem } from '@/models/api'
 
 export const getAboutMe = async (): Promise<AboutResponseItem | null> => {
   let response = null

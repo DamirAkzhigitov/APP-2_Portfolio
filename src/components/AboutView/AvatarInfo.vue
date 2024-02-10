@@ -5,7 +5,7 @@
         <li v-for="skill in skillsLeft" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" class="item-icon" />
+            <img :src="skill?.icon" class="item-icon"  alt=""/>
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
@@ -24,7 +24,7 @@
         <li v-for="skill in skillsRight" :key="skill" class="avatar-soft-skill__item text-nowrap">
           <div v-show="skill.loading" class="item-title v-skeleton-loader__bone"></div>
           <div v-show="!skill.loading">
-            <img :src="skill?.icon" class="item-icon" />
+            <img :src="skill?.icon" alt="" class="item-icon"/>
             <span class="item-title">{{ skill?.title }}</span>
           </div>
         </li>
@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted, Ref, defineEmits } from 'vue'
 import { format, getIcon } from '@/utils/formatters'
-import { HardSkillItem, SkillItem, SkillResponse, SkillResponseItem } from '@/models/api'
+import { SkillItem, SkillResponse } from '@/models/api'
 import { getSkills } from '@/api/profile'
 
 const ANIMATION_SPEED = 350
@@ -112,8 +112,9 @@ const fetchSkills = async () => {
   skillsResponse.value = data
 }
 const setSkills = () => {
-  if (!skillsResponse.value) return
   const response = skillsResponse.value
+
+  if (!response) return
 
   const { SS: skillList } = response.skills
   const { L: hardSkillResponse } = response.hardSkills
@@ -128,11 +129,11 @@ const setSkills = () => {
   })
 
   addIcons(
-    hardSkillResponse.map(({ M }: HardSkillItem) => {
+    hardSkillResponse.map((item) => {
       return {
-        name: M.name.S,
-        color: `rgba(${M.color.S});`,
-        logo: M.logo.S
+        name: item.M.name.S,
+        color: `rgba(${item.M.color.S});`,
+        logo: item.M.logo.S
       }
     })
   )

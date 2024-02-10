@@ -30,4 +30,4 @@ export interface SkillItem {
   loading?: boolean
 }
 
-export type SkillResponse = SkillResponseItem[]
+export type SkillResponse = SkillResponseItem
